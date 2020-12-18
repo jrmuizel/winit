@@ -91,29 +91,46 @@ impl XConnection {
 
     pub fn query_pointer(&self, window: ffi::Window, device_id: c_int) -> Result<PointerState, XError> {
         unsafe {
-            let mut pointer_state: PointerState = mem::uninitialized();
-            pointer_state.xconn = self;
-            pointer_state.relative_to_window = (self.xinput2.XIQueryPointer)(
+            let mut root = 0;
+            let mut child = 0;
+            let mut root_x = 0.0;
+            let mut root_y = 0.0;
+            let mut win_x = 0.0;
+            let mut win_y = 0.0;
+            let mut buttons = Default::default();
+            let mut modifiers = Default::default();
+            let mut group = Default::default();
+
+            let relative_to_window = (self.xinput2.XIQueryPointer)(
                 self.display,
                 device_id,
                 window,
-                &mut pointer_state.root,
-                &mut pointer_state.child,
-                &mut pointer_state.root_x,
-                &mut pointer_state.root_y,
-                &mut pointer_state.win_x,
-                &mut pointer_state.win_y,
-                &mut pointer_state.buttons,
-                &mut pointer_state.modifiers,
-                &mut pointer_state.group,
+                &mut root,
+                &mut child,
+                &mut root_x,
+                &mut root_y,
+                &mut win_x,
+                &mut win_y,
+                &mut buttons,
+                &mut modifiers,
+                &mut group,
             ) == ffi::True;
-            if let Err(err) = self.check_errors() {
-                // Running the destrutor would be bad news for us...
-                mem::forget(pointer_state);
-                Err(err)
-            } else {
-                Ok(pointer_state)
-            }
+
+            self.check_errors()?;
+
+            Ok(PointerState {
+                xconn: self,
+                root,
+                child,
+                root_x,
+                root_y,
+                win_x,
+                win_y,
+                buttons,
+                modifiers,
+                group,
+                relative_to_window,
+            })
         }
     }
 
