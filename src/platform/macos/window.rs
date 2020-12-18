@@ -100,7 +100,7 @@ impl DelegateState {
                 util::set_style_mask(*self.window, *self.view, curr_mask);
             }
 
-            is_zoomed != 0
+            is_zoomed != NO
         }
     }
 
@@ -172,7 +172,7 @@ impl DelegateState {
                     self.saved_standard_frame()
                 };
 
-                self.window.setFrame_display_(new_rect, 0);
+                self.window.setFrame_display_(new_rect, NO);
             }
         }
     }
@@ -1298,14 +1298,14 @@ unsafe fn nswindow_set_min_dimensions<V: NSWindow + Copy>(window: V, mut min_siz
     // If necessary, resize the window to match constraint
     if current_rect.size.width < min_size.width {
         current_rect.size.width = min_size.width;
-        window.setFrame_display_(current_rect, 0)
+        window.setFrame_display_(current_rect, NO)
     }
     if current_rect.size.height < min_size.height {
         // The origin point of a rectangle is at its bottom left in Cocoa.
         // To ensure the window's top-left point remains the same:
         current_rect.origin.y += current_rect.size.height - min_size.height;
         current_rect.size.height = min_size.height;
-        window.setFrame_display_(current_rect, 0)
+        window.setFrame_display_(current_rect, NO)
     }
 }
 
@@ -1322,14 +1322,14 @@ unsafe fn nswindow_set_max_dimensions<V: NSWindow + Copy>(window: V, mut max_siz
     // If necessary, resize the window to match constraint
     if current_rect.size.width > max_size.width {
         current_rect.size.width = max_size.width;
-        window.setFrame_display_(current_rect, 0)
+        window.setFrame_display_(current_rect, NO)
     }
     if current_rect.size.height > max_size.height {
         // The origin point of a rectangle is at its bottom left in Cocoa.
         // To ensure the window's top-left point remains the same:
         current_rect.origin.y += current_rect.size.height - max_size.height;
         current_rect.size.height = max_size.height;
-        window.setFrame_display_(current_rect, 0)
+        window.setFrame_display_(current_rect, NO)
     }
 }
 

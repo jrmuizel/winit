@@ -206,7 +206,7 @@ extern fn has_marked_text(this: &Object, _sel: Sel) -> BOOL {
     //println!("hasMarkedText");
     unsafe {
         let marked_text: id = *this.get_ivar("markedText");
-        (marked_text.length() > 0) as i8
+        (marked_text.length() > 0) as BOOL
     }
 }
 
